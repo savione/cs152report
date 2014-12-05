@@ -51,6 +51,18 @@ How interactivity and noise make reconstruction harder, both individually and to
 
 \section{Methods}
 
+To investigate how the ease of reconstruction of a specific content-base depends on the interactiveness of the content stream and on the noise added to the content stream, we set up two simple models. In the first model, which lacks interaction, there is a space of possible outputs with utilities assigned by the content provider -- the particular output given to a user is chosen by the \emph{exponential mechanism} from the differential privacy literature.
+
+In the second model, what is output is a \emph{sequence} of items. This model is Markovian in that the probability of any particular item appearing at a certain position in the sequence is purely a function of the previous item occurring in the sequence, and possibly user input related to this item. The first item of the sequence is chosen uniformly randomly, and subsequent items are chosen via the exponential mechanism. As in the first model, the content provider assigns utilities to each item-to-item transition which are used by the exponential mechanism. However, in this model we allow for interaction. At query-time, the user provides a vector of preferences, one for each item in the item space. The utilities of the transitions away from a particular item are allowed to be functions of the user preference value for that item.
+
+We now develop the two models mathematically.
+
+\subsection{Model 1}
+
+Let \(\mathcal{S}\) be the set of all possible outputs to a streaming query. Let \(\mathcal{I} \subseteq \mathcal{S}\) be a set of \emph{intenteded} outputs -- these being, informally, the outputs that the content provider actually wishes the users to receive in the absence of noise. The content provider specifies \(\mathbf{u} = [(u_1, s_1), (u_2, s_2), (u_3, s_3), \dots]\), where each \(u_j \in [0, 1]\) and each \(s_j \in \mathcal{S}\). Here, \(\mathbf{u}\) is a multiset (elements can occur more than once) with any desired cardinality. In terms of differential privacy, \(\mathbf{u}\) is a database.
+
+
+
 \section {Results and Discussion}
 
 %\begin{figure}[H]
