@@ -32,14 +32,22 @@
 
 \title{Differentially Private Interactive Media}
 
-\author{\vspace{-0.5cm}{\hspace{0.1cm} \sc Cutter Coryell \hspace{1.6cm} James Chang \hspace{1.6cm} Jan Van Bruggen}} \email{ccoryell@caltech.edu \hspace{1.2cm} jcchang@caltech.edu \hspace{1.2cm} jvanbrug@caltech.edu}
-\vspace{0.2cm}\affil{California Institute of Technology} \vspace{1cm}
+\author{\vspace{-0.5cm}{\hspace{0.1cm} \sc Jan Van Bruggen \hspace{1.6cm} James Chang \hspace{1.6cm} Cutter Coryell}} \email{jvanbrug@caltech.edu \hspace{1.2cm} jcchang@caltech.edu \hspace{1.2cm} ccoryell@caltech.edu}
+\vspace{0.2cm}\affil{California Institute of Technology \vspace{1cm}}
 
 
 
 \section{Introduction}
 
-In the modern era, entities who own and sell digital content are increasingly concerned with unpaid access to that content. A variety of ``digital rights management''
+In the modern era, entities who own and sell digital content are increasingly concerned with unauthorized access to that content. A variety of ``digital rights management'' (DRM) technologies have been introduced to attempt to restrict content access to authorized users, with mixed results. In many cases arms races have resulted between content-providers and users in terms of rights management technologies and methods for breaking them. These technologies usually make it hard to share content between authorized users and unauthorized users and are commonly criticized for inconveniencing authorized users -- some content-providers push their lack of DRM as a selling point, and a general anti-DRM movement has sprung up.
+
+One way to prevent unauthorized sharing of content is to change the nature of the content to make it fundamentally unsharable. For example, by \emph{streaming} content as opposed to handing out content in bundles which can be saved locally, it becomes non-trivial for the regular user to share their received content. Many music, movie/television, and even video-game services take this approach to control content access. However, it is not difficult for an unauthorized user to record the data stream in a way that can be saved locally, such that he manufactures his own content bundles which he can share. We say that the user has \emph{fully reconstructed} the content if she can provide an identical experience to an unauthorized user as an authorized user would receive through the official content channel.
+
+It becomes significantly harder for a user to fully reconstruct the original content if the streamed content is in some way interactive. For example, in a streamed video-game, the data that is streamed to the user depends on the the input that the user provides. In order to provide the same experience to unauthorized users as the one that authorized users receive, the reconstructor must provide every possible time series of inputs to the content provider and record every resulting stream. If the content is deterministic -- the same time series of inputs always leads to the same data stream -- then this reconstruction ensures that any inputs that authorized users can give can also be given by unauthorized users \emph{with the same results}. This satisfies our definition of full reconstruction, because the experience of the unauthorized user is identical to that of the authorized user.\footnote{We define two users to have\emph{ identical experience} if, given the same time series of user inputs, the true probability distributions of certain content being streamed to each user is the same. This will be further motivated when we discuss noise in streaming.}
+
+Yet another change that can be made to how content is provided which makes reconstruction more difficult is the addition of noise. This method is motivated by differential privacy, which is a notion of how the probability of a certain output to a query will change given a change in the queried database. By adding noise to a query in a special way, the particular existence or absence of a datum in the database can be concealed while still revealing useful information that respects differential privacy. The general idea of using noise to make it harder to reconstruct content is one we would like to borrow. With noise,\footnote{To be clear, when we refer to \emph{noise} we mean simply the introduction of randomness in the potential stream output -- far more general than the literal addition of noise values to the data.} every stream a content provider serves to a user is a random variable. Someone attempting to reconstruct the original content who, as before, only samples from the stream once (or once for every possible input time series if the content is interactive) will provide users with an empirical probability distribution where only one output has nonzero probability: that particular output the reconstructor sampled from the original content provider. This is quite possibly a poor approximation to the actual probability distribution governing possible outputs in the official stream.
+
+How interactivity and noise make reconstruction harder, both individually and together, is an interesting question that we attempt to answer.
 
 \section{Methods}
 
