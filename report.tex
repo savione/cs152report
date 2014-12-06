@@ -128,12 +128,19 @@ We investigated how the KL-divergence of the adversary's approximate probability
 \caption{The KL divergence of the adversary's approximate probability distribution relative to the true probability distribution of Model 1, as a function of the number of queries to the mechanism as well as the privacy parameter \(\varepsilon\). For the blue line, the probability a given sampled song was \emph{intended} was 10\%; for the green line it was 10\%; for the red line it was 69\%; for the cyan line it was 100\%.}
 \end{figure}
 
+Figure~1 demonstrates the opposite result from what we expected. Since a lower \(\varepsilon\) leads to more probability mass on unintended outputs --- more noise --- we expected the adversary to be hindered in his attempts to reconstruct the true probability distribution. Reality is quite the otherwise --- we see that the KL divergence starts out lower for lower \(\varepsilon\). The reason for this is that the Multiplicative Weights algorithm starts by assigning equal probabilities to each output, which is the limit of the true probability distribution as \(\varepsilon \rightarrow 0\). Therefore, for small \(\varepsilon\) a uniform probability distribution accurately approximates the true probability distribution.
+
+A somewhat curious 
+
 \subsection{Model 2}
 
 \section{Conclusions}
 
 \section{Further Work}
 
+There is much further work to be done in this area. A limitation of our Model 1 is that it does not support interactivity, even though it could be easily extended to do so. Further, more methods for quantifying the ease of reconstruction of a content base should be explored, as well as alternative reconstruction strategies for the adversary. A ``Model 3'' might relax the Markovian property of Model 2 so that content-node transition probabilities can depend on the full sequence so far --- this would provide a more general toolkit for content-production.
+
+The biggest challenge the authors faced was defining exactly what could be protected from an adversary. In this paper, we settled with the attempting to protect the probabilities of various outputs, but we are not fully satisfied with this definition. More work should be put into exploring exactly what features of creative works can be protected from reconstruction without significant impacting the enjoyment of the work by authorized users.
 
 %%%%%%%%%%%
 \end{document}
