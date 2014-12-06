@@ -119,26 +119,54 @@ This mechanism gives uniform probability to each transition between content node
 
 \subsection{Model 1}
 
-We investigated how the KL-divergence of the adversary's approximate probability distribution over outputs relative to the true probability distribution over outputs change as a function of the number of queries to the mechanism as well as the value of the privacy parameter \(\varepsilon\). The result is in Figure~1.
+We implemented Model 1 by picking a subset of the output space at random to be ``intended'' and assigned these random utilities in \((0,1].\) We then investigated how the KL-divergence of the adversary's approximate probability distribution over outputs relative to the true probability distribution over outputs change as a function of the number of queries to the mechanism as well as the value of the privacy parameter \(\varepsilon\). The result is in Figure~1.
 
 \begin{figure}[H]
 \vspace{-0.24cm}
 \centering
 \hspace*{-0.5cm}\includegraphics[width=1.2\textwidth]{model1_KL.png}
-\caption{The KL divergence of the adversary's approximate probability distribution relative to the true probability distribution of Model 1, as a function of the number of queries to the mechanism as well as the privacy parameter \(\varepsilon\). For the blue line, the probability a given sampled song was \emph{intended} was 10\%; for the green line it was 10\%; for the red line it was 69\%; for the cyan line it was 100\%.}
+\caption{The KL divergence of the adversary's approximate probability distribution relative to the true probability distribution of Model 1, as a function of the number of queries to the mechanism as well as the privacy parameter \(\varepsilon\). For the blue line, the probability a given sampled song was \emph{intended} was 10\%; for the green line it was 10\%; for the red line it was 69\%; for the cyan line it was 100\%. The update parameter \(\eta\) was \(10^{-2}\).}
 \end{figure}
 
 Figure~1 demonstrates the opposite result from what we expected. Since a lower \(\varepsilon\) leads to more probability mass on unintended outputs --- more noise --- we expected the adversary to be hindered in his attempts to reconstruct the true probability distribution. Reality is quite the otherwise --- we see that the KL divergence starts out lower for lower \(\varepsilon\). The reason for this is that the Multiplicative Weights algorithm starts by assigning equal probabilities to each output, which is the limit of the true probability distribution as \(\varepsilon \rightarrow 0\). Therefore, for small \(\varepsilon\) a uniform probability distribution accurately approximates the true probability distribution.
 
-A somewhat curious 
+A somewhat curious feature of the KL-divergence as a function of query count is that it does not monotonically-decrease. Instead, it seems to decrease, reach a minimum, then increase again. We were unable to explore more than \(10^4\) queries due to computing power limitations. This general feature of the KL-divergences was observed for various values of \(\eta\). We would expect the approximate probability distribution to better approximate the true probability distribution as more queries were performed, so this is mysterious and warrants further investigation.
 
 \subsection{Model 2}
 
+We began by investigating the probabilities of various sequence outputs from \(sample_2\) for a model network --- this is described in Figure~2. An interesting phenomenon is that plateaus can be seen in the sequence probability curves, indicating that many nodes have similar probabilities, but between these similar groups there is a sharp discontinuity in probability. This is most profoundly visible for lower fractions of defined links. 
+
+\begin{figure}[H]
+\vspace{-0.24cm}
+\centering
+\hspace*{-0.5cm}\includegraphics[width=1.1\textwidth]{varying_fraction_of_links_defined.png}
+\caption{\emph{Top}: Edge utilities vs. utility-ranking of edges in a content network with 10 nodes where each node-node edge has a chance of having nonzero utility given by the fraction of defined links. Utilities for edges with nonzero utilities were drawn from the uniform distribution over \((0,1]\). This content network had \(\mathcal{P} = \{0, 1\}\). \\
+\emph{Bottom}: Probabilities of various length-4 sequences in the above content network vs. the probability-ranking of those sequences. This probabilities were chosen by \(sample_2\) with an \(\varepsilon\) of 100.}
+\end{figure}
+
+
+\newpage
+
+We suspect, but have not verified, that the sequences on the same plateau have the same number of \emph{intended} links in them -- 3 for the first plateau, 2 for the second, 1 for the third, and 0 for the last. As the fraction of defined links increases, these plateaus are smoothed out as unintended nodes with utility 0 become intended nodes with random utility in \((0, 1]\).
+
+A rough metric for quantifying the quality of the adversary's reconstruction is by looking at the Top Sequences Error. The top \(X\%\) error is defined as follows: take the top \(X\%\) most probable sequences in reality and the top \(X\%\) most probable sequences according to the adversary's approximation. The proportion of true \(X\%\) most probable sequences not found in the \(X\%\) most probable sequences according to the adversary is the top \(X\%\) sequences error. The Top Sequences Error is plotted as a function of the number of queries by an adversary using \(MW_2\) with \(\eta = 10^{-4}\) to reconstruct the network of Figure~2.
+
+\begin{figure}[H]
+\vspace{-0.24cm}
+\centering
+\hspace*{-0.5cm}\includegraphics[width=1.2 	\textwidth]{top_seq_err.png}
+\caption{Top Sequences Error vs. the number of queries by an adversary using \(MW_2\) with \(\eta = 10^{-4}\) to reconstruct the network of Figure~2.}
+\end{figure}
+
+For a reason we don't understand, the top sequences error begins lower than would be expected from random chance, then rises --- monotonically up to \(10^7\) queries for the top \(10\%\) error, but peaking and eventually declining for the top \(50\%\) error. We would expect that the top sequence error would decrease monotonically in the number of queries, but the actual behavior is much more complicated and warrants further investigation. 
+
 \section{Conclusions}
+
+Ideally we would like to show that interactivity and noise combine to allow a linear increase in the effort of content-creators to lead to an exponential increase in the effort required to fully reconstruct a content-base. We were unable to show this as of yet. However, we have implemented a powerful model of content generation that is generalizable to many media and forms of content and reflects high-level principles of artistic media.
 
 \section{Further Work}
 
-There is much further work to be done in this area. A limitation of our Model 1 is that it does not support interactivity, even though it could be easily extended to do so. Further, more methods for quantifying the ease of reconstruction of a content base should be explored, as well as alternative reconstruction strategies for the adversary. A ``Model 3'' might relax the Markovian property of Model 2 so that content-node transition probabilities can depend on the full sequence so far --- this would provide a more general toolkit for content-production.
+There is much further work to be done in this area. A limitation of our Model 1 is that it does not support interactivity, even though it could be easily extended to do so. Further, we did not have a chance to explore in any detail the effect of interactivity in Model 2, but it is in a fully implemented state where, given more time, we would be able to show results. More methods for quantifying the ease of reconstruction of a content base should be explored, as well as alternative reconstruction strategies for the adversary. A ``Model 3'' might relax the Markovian property of Model 2 so that content-node transition probabilities can depend on the full sequence so far --- this would provide a more general toolkit for content-production.
 
 The biggest challenge the authors faced was defining exactly what could be protected from an adversary. In this paper, we settled with the attempting to protect the probabilities of various outputs, but we are not fully satisfied with this definition. More work should be put into exploring exactly what features of creative works can be protected from reconstruction without significant impacting the enjoyment of the work by authorized users. Ideally, a fully differentially-private mechanism could be designed to protect proprietary information so that the rich tools of the differential privacy literature could be employed.
 
