@@ -117,13 +117,18 @@ This mechanism gives uniform probability to each transition between content node
 
 \section {Results and Discussion}
 
-%\begin{figure}[H]
-%\vspace{-0.24cm}
-%\centering
-%\hspace*{-1cm}\includegraphics[width=1.2\textwidth]{orbit_figs/radius.pdf}
-%\caption{The radius \(r\), or orbital separation, of the Hulse-Taylor binary over a period of 20 hours. The oscillations in the separation are due to the ellipticity of the orbit.}
-%\label{orbit-radius}
-%\end{figure}
+\subsection{Model 1}
+
+We investigated how the KL-divergence of the adversary's approximate probability distribution over outputs relative to the true probability distribution over outputs change as a function of the number of queries to the mechanism as well as the value of the privacy parameter \(\varepsilon\). The result is in Figure~1.
+
+\begin{figure}[H]
+\vspace{-0.24cm}
+\centering
+\hspace*{-0.5cm}\includegraphics[width=1.2\textwidth]{model1_KL.png}
+\caption{The KL divergence of the adversary's approximate probability distribution relative to the true probability distribution of Model 1, as a function of the number of queries to the mechanism as well as the privacy parameter \(\varepsilon\). For the blue line, the probability a given sampled song was \emph{intended} was 10\%; for the green line it was 10\%; for the red line it was 69\%; for the cyan line it was 100\%.}
+\end{figure}
+
+\subsection{Model 2}
 
 \section{Conclusions}
 
